@@ -11,6 +11,7 @@ from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.util import Throttle
 from homeassistant.const import CONF_USERNAME, CONF_PASSWORD
+import homeassistant.helpers.config_validation as cv
 
 from .fplapi import FplApi
 from .const import (
@@ -22,6 +23,8 @@ from .const import (
 )
 
 from .fplDataUpdateCoordinator import FplDataUpdateCoordinator
+
+CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
 
 MIN_TIME_BETWEEN_UPDATES = timedelta(seconds=30)
 
