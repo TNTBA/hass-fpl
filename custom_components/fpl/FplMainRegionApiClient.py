@@ -190,7 +190,7 @@ class FplMainRegionApiClient:
         data.update(appliance_usage_data)
 
         # Gets the account balance and past due status.
-        # data.update(await self.get_account_details(account))
+        data.update(await self.get_account_details(account))
 
         return data
 
@@ -464,33 +464,46 @@ class FplMainRegionApiClient:
     async def get_account_details(self, account_number: str) -> dict:
         """Get accounts"""
 
-        _LOGGER.info("Getting accounts")
-
         data = {}
 
         ACCOUNTS_URL = (
             API_HOST
-            + "/cs/customer/v1/multiaccount/resources/userId/current/accounts?contactFlag=N&count=5&view=profileAccountsList"
+            + "/cs/customer/v1/accountservices/resources/loginNew?mediaChannel=IOS"
         )
 
         try:
-            headers = {}
+            headers = {"Content-Type": "application/json"}
             if hasattr(self, "jwt_token") and self.jwt_token:
                 headers["jwttoken"] = self.jwt_token
             async with async_timeout.timeout(TIMEOUT):
-                response = await self.session.get(ACCOUNTS_URL, headers=headers)
+                response = await self.session.post(
+                    ACCOUNTS_URL, json={}, headers=headers
+                )
+                json_data = await response.json()
                 if response.status == 200:
-                    json_data = await response.json()
-                    data = json_data["data"]
-
-                    for account in data["data"]:
+                    for account in json_data["data"]["AccountList"]["data"]:
                         if account["accountNumber"] == account_number:
-                            return account
+                            balances = account["balancesDrilldown"]["data"]
 
-                    data["balance"] = float(account["balance"])
-                    data["pastDue"] = bool(account["pastDue"])
-                    # There a more fields available in the response, but none that seem to be useful.
-                    # For example, deposit, statusCategory (ex, OPEN, CLOSED), and property address.
+                            if len(balances) == 0:
+                                continue
+
+                            balance = balances[0]["amount"]
+
+                            balance = balance.replace("$", "")
+                            balance = balance.replace(",", "")
+                            balance = float(balance)
+
+                            data["balance"] = balance
+
+                            # Due Date is provided like this `Dec 22, 2025` we need to convert this to a date.
+                            balance_due_date = balances[0]["dueDate"]
+                            balance_due_date = datetime.strptime(
+                                balance_due_date, "%b %d, %Y"
+                            ).date()
+                            data["balance_due_date"] = balance_due_date
+
+                return data
 
         except Exception as e:
             _LOGGER.error(e)
