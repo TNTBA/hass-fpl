@@ -2,7 +2,7 @@
 
 import asyncio
 import logging
-from datetime import timedelta, datetime
+from datetime import timedelta
 from zoneinfo import ZoneInfo
 
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed

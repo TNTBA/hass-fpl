@@ -9,4 +9,6 @@ dependencies = []
 [dependency-groups]
 dev = [
     "homeassistant>=2025.9.3",
+    "black>=24.0.0",
+    "ruff>=0.8.0",
 ]
