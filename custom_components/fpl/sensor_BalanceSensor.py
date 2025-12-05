@@ -1,6 +1,7 @@
 """Balance sensors"""
 
 from .fplEntity import FplMoneyEntity
+from .fplEntity import FplDateEntity
 
 
 class BalanceSensor(FplMoneyEntity):
@@ -14,6 +15,14 @@ class BalanceSensor(FplMoneyEntity):
         self._attr_native_value = self.getData("balance")
         return self._attr_native_value
 
-    def customAttributes(self):
-        attributes = {"pastDue": self.getData("pastDue")}
-        return attributes
+
+class BalanceDueDateSensor(FplDateEntity):
+    """balance due date sensor"""
+
+    def __init__(self, coordinator, config, account):
+        super().__init__(coordinator, config, account, "Balance Due Date")
+
+    @property
+    def native_value(self):
+        self._attr_native_value = self.getData("balance_due_date")
+        return self._attr_native_value

@@ -64,8 +64,7 @@ from .sensor_ApplianceUsageSensor import (
 )
 
 
-from .sensor_BalanceSensor import BalanceSensor
-
+from .sensor_BalanceSensor import BalanceSensor, BalanceDueDateSensor
 from .const import CONF_ACCOUNTS, CONF_TERRITORY, DOMAIN, FPL_MAINREGION, FPL_NORTHWEST
 
 ALL_REGIONS = [FPL_MAINREGION, FPL_NORTHWEST]
@@ -128,6 +127,7 @@ registerSensor(FplHourlyUsageKWHSensor, ONLY_MAINREGION)
 
 # Balance sensors
 registerSensor(BalanceSensor, ONLY_MAINREGION)
+registerSensor(BalanceDueDateSensor, ONLY_MAINREGION)
 
 # Appliance sensors
 registerSensor(CoolingCostSensor, ONLY_MAINREGION)
