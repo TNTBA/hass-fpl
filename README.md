@@ -55,20 +55,6 @@ See estimated usage and cost by appliance category:
 - **FPL Main Region** (Full feature support)
 - **FPL Northwest Region** (Core billing features)
 
-
-## Development
-
-This repo uses `uv` for Python package dependencies. 
-
-1. Install `uv` following these [instructions](https://docs.astral.sh/uv/getting-started/installation/).
-2. Run `uv venv`
-3. Run `uv sync --dev`
-4. Run `./scripts/develop`. This will start Home Assistant locally.
-5. Access HAOS `http://localhost:8321`
-6. If asked, setup Home Assistant for the first time.
-7. Go to Settings > Device & Services > Add Integrations, and create a new FPL integration.
-8. Make changes to the source code and restart HAOS to take effect.
-
 ---
 
 ## Installation
@@ -98,7 +84,23 @@ This repo uses `uv` for Python package dependencies.
 3. Search for **"FPL"**
 4. Enter your FPL account credentials
 
+---
+
+## Development
+
+This repo uses `uv` for Python package dependencies. 
+
+1. Install `uv` following these [instructions](https://docs.astral.sh/uv/getting-started/installation/).
+2. Run `uv venv`
+3. Run `uv sync --dev`
+4. Run `./scripts/develop`. This will start Home Assistant locally.
+5. Access HAOS `http://localhost:8321`
+6. If asked, setup Home Assistant for the first time.
+7. Go to Settings > Device & Services > Add Integrations, and create a new FPL integration.
+8. Make changes to the source code and restart HAOS to take effect.
+
 ## Contributions are welcome!
 
 If you want to contribute to this please read the [Contribution guidelines](CONTRIBUTING.md)
+
 
