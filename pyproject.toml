@@ -1,0 +1,14 @@
+[project]
+name = "hass-fpl"
+version = "1.0.0"
+description = "Florida Power and Light Integration for Home Assistant"
+readme = "README.md"
+requires-python = ">=3.13.2"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "homeassistant>=2025.9.3",
+    "black>=24.0.0",
+    "ruff>=0.8.0",
+]

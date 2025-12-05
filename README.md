@@ -1,11 +1,90 @@
-_Component to integrate with Fpl_
+<img width="200" alt="Florida_Power_ _Light_Logo svg" src="https://github.com/user-attachments/assets/a1a8e044-7e88-43fd-ae91-eb0336d7fb40" />
 
-**This component will set up the following platforms.**
+---
 
-Platform | Description
--- | --
-`sensor` | Show info from Fpl data.
+## Features
 
+This integration connects your Florida Power & Light (FPL) account to Home Assistant, providing real-time energy monitoring and billing insights.
+
+### 📊 Energy Dashboard Integration
+
+Seamlessly integrates with Home Assistant's **Energy Dashboard** with hourly usage statistics, allowing you to visualize your electricity consumption patterns over time.
+
+### 💰 Billing & Cost Tracking
+
+| Sensor | Description |
+|--------|-------------|
+| Projected Bill | Estimated bill for the current billing period |
+| Bill to Date | Current charges accumulated so far |
+| Daily Average | Average daily cost |
+| Budget Billing | Support for budget billing customers (projected budget bill, deferred amount) |
+
+### ⚡ Usage Monitoring
+
+| Sensor | Description |
+|--------|-------------|
+| Daily Usage | Daily kWh consumption and cost |
+| Hourly Usage | Hour-by-hour breakdown of usage and cost |
+| Projected kWh | Estimated total kWh for the billing period |
+| Bill to Date kWh | Total kWh consumed so far |
+
+### ☀️ Solar / Net Metering Support
+
+For customers with solar panels:
+- **Net Received kWh** – Energy received from the grid
+- **Net Delivered kWh** – Energy sent back to the grid
+
+### 📅 Billing Cycle Information
+
+- Current & next bill dates
+- Service days in billing period
+- Days elapsed / remaining
+
+### 🏠 Appliance-Level Breakdown
+
+See estimated usage and cost by appliance category:
+
+| Category | | |
+|----------|----------|----------|
+| 🌡️ Cooling | 🚿 Water Heater | 👕 Laundry |
+| 🧊 Refrigeration | 🏊 Pool | 💡 Lighting |
+| 📺 Entertainment | 🍳 Cooking | 📦 Miscellaneous |
+
+### 🌎 Supported Regions
+
+- **FPL Main Region** (Full feature support)
+- **FPL Northwest Region** (Core billing features)
+
+---
+
+## Installation
+
+### Option 1: HACS (Recommended)
+
+[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=dotKrad&repository=hass-fpl&category=integration)
+
+**Or manually add via HACS:**
+
+1. Open **HACS** in your Home Assistant
+2. Click the **⋮** menu (top right) → **Custom repositories**
+3. Add `https://github.com/dotKrad/hass-fpl` with category **Integration**
+4. Search for **"FPL"** and click **Download**
+5. Restart Home Assistant
+
+### Option 2: Manual Installation
+
+1. Download the `custom_components/fpl` folder from this repository
+2. Copy it to your Home Assistant `config/custom_components/` directory
+3. Restart Home Assistant
+
+### Configuration
+
+1. Go to **Settings** → **Devices & Services**
+2. Click **+ Add Integration**
+3. Search for **"FPL"**
+4. Enter your FPL account credentials
+
+---
 
 ## Development
 
@@ -13,22 +92,15 @@ This repo uses `uv` for Python package dependencies.
 
 1. Install `uv` following these [instructions](https://docs.astral.sh/uv/getting-started/installation/).
 2. Run `uv venv`
-3. Run `uv sync`
-
-## Installation
-
-1. Using the tool of choice open the directory (folder) for your HA configuration (where you find `configuration.yaml`).
-2. If you do not have a `custom_components` directory (folder) there, you need to create it.
-3. In the `custom_components` directory (folder) create a new folder called `fpl`.
-4. Download _all_ the files from the `custom_components/fpl/` directory (folder) in this repository.
-5. Place the files you downloaded in the new directory (folder) you created.
-6. Restart Home Assistant
-7. Choose:
-   - In the HA UI go to "Configuration" -> "Integrations" click "+" and search for "FPL"
-
-# Compatible with HACS
-Please follow directions [here](https://hacs.xyz/docs/faq/custom_repositories/), and use https://github.com/dotKrad/hass-fpl as the repository URL.
+3. Run `uv sync --dev`
+4. Run `./scripts/develop`. This will start Home Assistant locally.
+5. Access HAOS `http://localhost:8321`
+6. If asked, setup Home Assistant for the first time.
+7. Go to Settings > Device & Services > Add Integrations, and create a new FPL integration.
+8. Make changes to the source code and restart HAOS to take effect.
 
 ## Contributions are welcome!
 
 If you want to contribute to this please read the [Contribution guidelines](CONTRIBUTING.md)
+
+

@@ -2,7 +2,8 @@
 
 import asyncio
 import logging
-from datetime import timedelta, datetime
+from datetime import timedelta
+from zoneinfo import ZoneInfo
 
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 from homeassistant.components.recorder.statistics import (
@@ -18,6 +19,9 @@ from homeassistant.util import dt as dt_util
 
 from .fplapi import FplApi
 from .const import DOMAIN, CONF_ACCOUNTS
+
+# FPL operates in Florida, which is in the Eastern timezone
+FPL_TIMEZONE = ZoneInfo("America/New_York")
 
 SCAN_INTERVAL = timedelta(seconds=1200)
 # Anything more than 15 days may cause Cloudflare to block all of our requests.
@@ -71,8 +75,14 @@ class FplDataUpdateCoordinator(DataUpdateCoordinator):
             if read_time is None:
                 continue
 
-            read_time = read_time.replace(minute=0, second=0, microsecond=0)
-            start = read_time - timedelta(hours=1)
+            # Ensure read_time is timezone-aware in FPL's timezone (Eastern)
+            if read_time.tzinfo is None:
+                read_time = read_time.replace(tzinfo=FPL_TIMEZONE)
+
+            # Convert to UTC for Home Assistant statistics
+            read_time_utc = read_time.astimezone(dt_util.UTC)
+            read_time_utc = read_time_utc.replace(minute=0, second=0, microsecond=0)
+            start = read_time_utc - timedelta(hours=1)
 
             if cost is not None:
                 if not last_cost_start or start > last_cost_start:
@@ -132,7 +142,7 @@ class FplDataUpdateCoordinator(DataUpdateCoordinator):
                     f"{DOMAIN}:{account}_hourly_usage"
                 )
                 if last_sum_start is not None:
-                    date = datetime.now() - timedelta(days=1)
+                    date = dt_util.now() - timedelta(days=1)
                     hourly = await self.api.apiClient.get_hourly_usage(
                         account, premise, date
                     )
@@ -140,7 +150,7 @@ class FplDataUpdateCoordinator(DataUpdateCoordinator):
                 else:
                     # Only backfill the full amount of days if the account has no hourly usage statistics.
                     # We need to start backwards. For example today - 360 days.
-                    date = datetime.now() - timedelta(days=HOURLY_USAGE_BACKFILL_DAYS)
+                    date = dt_util.now() - timedelta(days=HOURLY_USAGE_BACKFILL_DAYS)
 
                     all_hourly: list = []
                     for _ in range(HOURLY_USAGE_BACKFILL_DAYS):
