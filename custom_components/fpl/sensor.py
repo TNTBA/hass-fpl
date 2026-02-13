@@ -65,12 +65,29 @@ from .sensor_ApplianceUsageSensor import (
 
 
 from .sensor_BalanceSensor import BalanceSensor, BalanceDueDateSensor
+from .sensor_Top15CandidateSensor import (
+    MaxDemandKWSensor,
+    OnPeakDemandKWSensor,
+    PreviousBillAmountSensor,
+    BillDiffSensor,
+    TodayMeterReadSensor,
+    CurrentBillReadSensor,
+    PreviousBillReadSensor,
+    AvgTemperatureSensor,
+    DailyNetReceivedKWHSensor,
+    DailyNetReceivedReadingSensor,
+    DailyTemperatureSensor,
+    DailyHumiditySensor,
+    MonthlyBillingChargeSensor,
+    MonthlyKwhUsedSensor,
+    MonthlyOnPeakConsumptionSensor,
+)
 from .const import CONF_ACCOUNTS, CONF_TERRITORY, DOMAIN, FPL_MAINREGION, FPL_NORTHWEST
 
 ALL_REGIONS = [FPL_MAINREGION, FPL_NORTHWEST]
 ONLY_MAINREGION = [FPL_MAINREGION]
 
-sensors = {}
+sensors: dict[str, list] = {}
 
 
 def registerSensor(sensor, regions):
@@ -148,6 +165,23 @@ registerSensor(CookingCostSensor, ONLY_MAINREGION)
 registerSensor(CookingUsageSensor, ONLY_MAINREGION)
 registerSensor(MiscellaneousCostSensor, ONLY_MAINREGION)
 registerSensor(MiscellaneousUsageSensor, ONLY_MAINREGION)
+
+# Top 15 deep-discovery candidate sensors
+registerSensor(MaxDemandKWSensor, ONLY_MAINREGION)
+registerSensor(OnPeakDemandKWSensor, ONLY_MAINREGION)
+registerSensor(PreviousBillAmountSensor, ONLY_MAINREGION)
+registerSensor(BillDiffSensor, ONLY_MAINREGION)
+registerSensor(TodayMeterReadSensor, ONLY_MAINREGION)
+registerSensor(CurrentBillReadSensor, ONLY_MAINREGION)
+registerSensor(PreviousBillReadSensor, ONLY_MAINREGION)
+registerSensor(AvgTemperatureSensor, ONLY_MAINREGION)
+registerSensor(DailyNetReceivedKWHSensor, ONLY_MAINREGION)
+registerSensor(DailyNetReceivedReadingSensor, ONLY_MAINREGION)
+registerSensor(DailyTemperatureSensor, ONLY_MAINREGION)
+registerSensor(DailyHumiditySensor, ONLY_MAINREGION)
+registerSensor(MonthlyBillingChargeSensor, ONLY_MAINREGION)
+registerSensor(MonthlyKwhUsedSensor, ONLY_MAINREGION)
+registerSensor(MonthlyOnPeakConsumptionSensor, ONLY_MAINREGION)
 
 
 async def async_setup_entry(hass, entry, async_add_devices):

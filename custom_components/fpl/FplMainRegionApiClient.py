@@ -3,6 +3,7 @@
 import json
 import logging
 from datetime import datetime
+from typing import Any
 import aiohttp
 import async_timeout
 
@@ -121,7 +122,7 @@ class FplMainRegionApiClient:
 
     async def update(self, account) -> dict:
         """Get data from resources endpoint"""
-        data = {}
+        data: dict[str, Any] = {}
         URL_RESOURCES_ACCOUNT = (
             API_HOST
             + "/cs/customer/v1/accountservices/resources/account/{account}/select?view=account-lander"
@@ -233,7 +234,7 @@ class FplMainRegionApiClient:
     async def __getBBL_async(self, account, projectedBillData) -> dict:
         """Get budget billing data"""
         _LOGGER.info("Getting budget billing data")
-        data = {}
+        data: dict[str, Any] = {}
 
         try:
             headers = {}
@@ -306,7 +307,7 @@ class FplMainRegionApiClient:
             + "/cs/customer/v1/energydashboard/resources/energy-usage/account/{account}/mobile-energy-service"
         )
 
-        data = {}
+        data: dict[str, Any] = {}
         try:
             headers = {}
             if hasattr(self, "jwt_token") and self.jwt_token:
@@ -330,9 +331,27 @@ class FplMainRegionApiClient:
                     data["projectedBill"] = float(current_usage.get("projectedBill"))
                     data["dailyAvg"] = float(current_usage.get("dailyAvg"))
                     data["avgHighTemp"] = int(current_usage.get("avgHighTemp"))
+                    data["avgTemp"] = float(current_usage.get("avgTemp") or 0)
                     data["billToDateKWH"] = float(current_usage.get("billToDateKWH"))
                     data["recMtrReading"] = int(current_usage.get("recMtrReading") or 0)
                     data["delMtrReading"] = int(current_usage.get("delMtrReading") or 0)
+                    data["maxDemandKw"] = float(current_usage.get("maxDemandKw") or 0)
+                    data["onPeakDemandKw"] = float(
+                        current_usage.get("onPeakDemandKw") or 0
+                    )
+                    data["previousBillAmount"] = float(
+                        current_usage.get("previousBillAmount") or 0
+                    )
+                    data["billDiff"] = float(current_usage.get("billDiff") or 0)
+                    data["todayMeterRead"] = int(
+                        current_usage.get("todayMeterRead") or 0
+                    )
+                    data["currentBillRead"] = int(
+                        current_usage.get("currentBillRead") or 0
+                    )
+                    data["previousBillRead"] = int(
+                        current_usage.get("previousBillRead") or 0
+                    )
                     data["billStartDate"] = datetime.strptime(
                         current_usage.get("billStartDate"), "%m-%d-%Y"
                     ).date()
@@ -369,6 +388,31 @@ class FplMainRegionApiClient:
                             data["DailyUsage"]["netDeliveredReading"] = float(
                                 day_usage.get("netDeliveredReading") or 0
                             )
+                            data["DailyUsage"]["netReceivedKwh"] = float(
+                                day_usage.get("netReceivedKwh") or 0
+                            )
+                            data["DailyUsage"]["netReceivedReading"] = float(
+                                day_usage.get("netReceivedReading") or 0
+                            )
+                            data["DailyUsage"]["temperature"] = float(
+                                day_usage.get("temperature") or 0
+                            )
+                            data["DailyUsage"]["humidity"] = float(
+                                day_usage.get("humidity") or 0
+                            )
+
+                    monthly_usage_rows = json_data.get("MonthlyUsage", {}).get("data", [])
+                    if monthly_usage_rows:
+                        latest_month = monthly_usage_rows[0]
+                        data["monthlyBillingCharge"] = float(
+                            latest_month.get("billingCharge") or 0
+                        )
+                        data["monthlyKwhUsed"] = float(
+                            latest_month.get("kwhUsed") or 0
+                        )
+                        data["monthlyOnPeakConsumption"] = float(
+                            latest_month.get("onPeakConsumption") or 0
+                        )
 
         except Exception as e:
             _LOGGER.error(e)
